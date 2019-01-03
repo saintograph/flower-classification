@@ -31,7 +31,7 @@ from PIL import Image
 import glob
 import os
 
-folder = './test_folder/**/'
+folder = './flower_data/**/'
 new_folder = './processed_folder/'
 imList = glob.glob(folder + '*.jpg', recursive=True)
 
@@ -44,9 +44,15 @@ for img in imList:
     binary = image > thresh
     fileName, fileExt = os.path.splitext(img)
     if len(fileName.split('/')) > 3:
-        if not os.path.exists(new_folder + fileName.split('/')[2] + '/'):
-            os.makedirs(new_folder + fileName.split('/')[2] + '/')
-        imsave(new_folder + fileName.split('/')[2] + '/' + fileName.split('/')[3] + '.jpg', img_as_uint(binary))
+        save_path = new_folder + fileName.split('/')[2]
+        print(fileName.split('/'))
+        for x in range(3, len(fileName.split('/')) - 1):
+            new_save_path = save_path + '/' + fileName.split('/')[x]
+            if not os.path.exists(new_save_path):
+                os.makedirs(new_save_path)
+                imsave(new_save_path + '/' + fileName.split('/')[-1] + '.jpg', img_as_uint(binary))
+            else:
+                imsave(new_save_path + '/' + fileName.split('/')[-1] + '.jpg', img_as_uint(binary))
     else:
         imsave(new_folder + fileName.split('/')[2] + '.jpg', img_as_uint(binary))
 
